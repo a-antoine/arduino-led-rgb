@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>LED RGB</title>
+
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/bootstrap-slider.min.css">
+		<link rel="stylesheet" href="css/main.css">
+	</head>
+	<body>
+		<div class="container">
+			<input id="h" data-slider-id='hSlider' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.01" data-slider-value="0" data-slider-tooltip="hide"/><br>
+			<input id="s" data-slider-id='sSlider' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.01" data-slider-value="0" data-slider-tooltip="hide"/><br>
+			<input id="v" data-slider-id='vSlider' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.01" data-slider-value="0" data-slider-tooltip="hide"/>
+		</div>
+		
+		<script src="js/jquery-3.3.1.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/bootstrap-slider.min.js"></script>
+
+		<script>
+			var h = 0, s = 0, v = 0;
+
+			var hSlider = new Slider("#h", {});
+			var sSlider = new Slider("#s", {});
+			var vSlider = new Slider("#v", {});
+
+			hSlider.on("slide", function () {h = hSlider.getValue(); sendNewHSV();});
+			sSlider.on("slide", function () {s = sSlider.getValue(); sendNewHSV();});
+			vSlider.on("slide", function () {v = vSlider.getValue(); sendNewHSV();});
+
+			var socket = new WebSocket("ws://" + location.hostname + (location.port ? ':' + location.port : ''));
+			socket.onopen = function (event) {
+				console.log("WebSocket opened");
+			};
+			socket.onmessage = function (event) {
+				var color = event.data.split(" ");
+				h = parseFloat(color[0]);
+				s = parseFloat(color[1]);
+				v = parseFloat(color[2]);
+				hSlider.setValue(h, false, false);
+				sSlider.setValue(s, false, false);
+				vSlider.setValue(v, false, false);
+			}
+
+			function sendNewHSV () {
+				console.log(h + " " + s + " " + v);
+				socket.send(h + " " + s + " " + v);
+			}
+		</script>
+	</body>
+</html>
