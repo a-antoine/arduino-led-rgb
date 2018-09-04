@@ -1,5 +1,5 @@
 {
-  "name": "arduino",
+  "name": "arduino-led-rgb",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

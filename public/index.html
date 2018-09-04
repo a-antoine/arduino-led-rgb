@@ -45,10 +45,9 @@
 				hSlider.setValue(h, false, false);
 				sSlider.setValue(s, false, false);
 				vSlider.setValue(v, false, false);
-			}
+			};
 
 			function sendNewHSV () {
-				console.log(h + " " + s + " " + v);
 				socket.send(h + " " + s + " " + v);
 			}
 		</script>
