@@ -46,6 +46,10 @@
 				sSlider.setValue(s, false, false);
 				vSlider.setValue(v, false, false);
 			};
+			socket.onclose = function (event) {
+			    console.log("Reconnecting ...");
+                socket = new WebSocket("ws://" + location.hostname + (location.port ? ':' + location.port : ''));
+            };
 
 			function sendNewHSV () {
 				socket.send(h + " " + s + " " + v);
